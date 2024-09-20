@@ -6,37 +6,38 @@ def get_device_status_cloud(device_id, device_type):
     # Conectar à Tuya Cloud
     c = tinytuya.Cloud(
         apiRegion="us",
-        apiKey="4sgpxxqtvhy785s559hr",
-        apiSecret="b63a2f1aa92548b6a31eaec8db3893c6"
+        apiKey=" ley",
+        apiSecret=" secret"
     )
 
     # Exibir status do dispositivo
     result = c.getstatus(device_id)
     if result.get('success'):
-
+        #coletando Status de Online
+        online = c.getconnectstatus(device_id)
         #exibir status - Debug
         #print (result)
         if device_type == 'sensor':
-            online = c.getconnectstatus(device_id)
-
+            #coletando valores
             temp = next(item['value'] for item in result['result'] if item['code'] == 'va_temperature')
             umid = next(item['value'] for item in result['result'] if item['code'] == 'va_humidity')
             batt = next(item['value'] for item in result['result'] if item['code'] == 'battery_percentage')
 
             output = f"online;{online};temp;{temp};umid;{umid};batt;{batt};api;{result.get('success')}"
             print(output)
-        elif device_type == 'sensor2':
-            online = c.getconnectstatus(device_id)
 
+        #sensor que bateria é retornada com "letras"
+        elif device_type == 'sensor2':
+            #coletando valores
             temp = next(item['value'] for item in result['result'] if item['code'] == 'va_temperature')
             umid = next(item['value'] for item in result['result'] if item['code'] == 'va_humidity')
             batt = next(item['value'] for item in result['result'] if item['code'] == 'battery_state')
 
             output = f"online;{online};temp;{temp};umid;{umid};batt;{batt};api;{result.get('success')}"
             print(output)        
-        elif device_type == 'smoke':
-            online = c.getconnectstatus(device_id)
 
+        elif device_type == 'smoke':
+            #coletando valores
             SentorStatus = next(item['value'] for item in result['result'] if item['code'] == 'smoke_sensor_status')
             TempoAlarme = next(item['value'] for item in result['result'] if item['code'] == 'temper_alarm')
             batt = next(item['value'] for item in result['result'] if item['code'] == 'battery_percentage')
@@ -48,9 +49,31 @@ def get_device_status_cloud(device_id, device_type):
     else:
         print(f"online;0;temp;0;batt;0;api;{result.get('Error')}")
 
-def get_device_status_local(device_id, ipv5, key_local, device_type):
+def get_device_status_local(device_id, ipv5,  device_type):
+    # abrri aruqico com as Lokal KEYs
+    # Variavel de teste - key_local2= "XPTO"  
+    # cloa prd /usr/lib/zabbix/externalscripts/localKey.txt
+    #coletando LOCAL_KEY
+    with open('localKey.txt', "r") as file:
+        for line in file:
+            # Divide a linha em device_id e local_key
+            parts = line.strip().split("|")
+            if len(parts) == 2:  # Verifica se a linha tem dois valores
+                device_id_from_file, local_key = parts
+                if device_id_from_file == device_id:
+                    #print(local_key)
+                    key_local2=local_key
+                    break
+                else:
+                    print ("ID nao encontrato")
+    
+
+   # key_local2= "XPTO"                        
+    print (" local2 tem ", key_local2)
+
+
     # Conectar ao dispositivo Tuya local
-    d = tinytuya.OutletDevice(device_id, ipv5, key_local)
+    d = tinytuya.OutletDevice(device_id, ipv5, key_local2)
     d.set_version(3.4)
     d.set_socketRetryLimit(3)  # retry count limit [default 5]
     d.set_socketRetryDelay(3)  # retry delay [default 5]
@@ -64,7 +87,7 @@ def get_device_status_local(device_id, ipv5, key_local, device_type):
             amperes = status['dps'].get('18', 'N/A')
             watts = status['dps'].get('19', 'N/A')
             volts = status['dps'].get('20', 'N/A')
-            potencia = status['dps'].get('52', 'N/A')
+            potencia = status['dps'].get('52', '0.0')
 
             amperes_formatado = f"{amperes / 1000:.1f}" if amperes != 'N/A' else 'N/A'
             watts_formatado = f"{int(watts / 10)}" if watts != 'N/A' else 'N/A'
@@ -108,8 +131,9 @@ if __name__ == "__main__":
         # Chamar a função para consulta à nuvem
         get_device_status_cloud(args.device_id, args.device_type)
     elif args.mode == 'local':
-        if args.ipv5 and args.key_local:
-            # Chamar a função para consulta local com base no tipo de dispositivo
-            get_device_status_local(args.device_id, args.ipv5, args.key_local, args.device_type)
+        # removeido and args.key_local:
+        if args.ipv5:
+            # Chamar a função para consulta local com base no tipo de dispositivo - args.key_local,
+            get_device_status_local(args.device_id, args.ipv5, args.device_type)
         else:
             print("Para o modo local, forneça os parâmetros ipv5 e key_local.")
