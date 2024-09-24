@@ -21,23 +21,23 @@ Precisamos de 3 informações importantes
 4) Modelo do dispositivos para ajdua em debugs, pois enventualmente temos modelos que tem pequena variavel e precisa de coletas 
 
 python3 cludListAll.py UserKEYtvhy785s559hr SecreTEaaXX:xx:xx:xx:xx::xxdb3ISSOVALEOURO
-+------------------+--------------------+-------------+---------------------+-------------+------------------+----------+
-| name             | id                 | key         | mac                 | category    | product_name     | model    |
-+==================+====================+=============+=====================+=============+=================+============+
-| Ar Bibi          | ebc53bxxxxxxxfzpyp | xxxxxxxxxxx |  XX:xx:xx:xx:xx::xx | infrared_ac | 空调             |           |
-+------------------+-----------------------+----------+-------------------------+-------------+--------------+-----------+
-| GWZig            | eb7ffxxxxxxx9alecs | xxxxxxxxxxx | XX:xx:xx:xx:xx::xx  | wg2         | NH-HG小网关     | ZHUB-W    |
-+------------------+--------------------+-------------+---------------------+-------------+------------------+----------+
-| P02-F.Vermelha   | exxxxxxxxxxx4c4wg1 | wxxxxxxxxxF | XX:xx:xx:xx:xx::xx  | aqcz        | WiFi Digital M | PJ-1103   |
-+------------------+--------------------+------------------+----------------+-------------+----------------+------------+
-| porta 01         | eb32dexxxxxxx9     | 40xxxxxxx05 | XX:xx:xx:xx:xx::xx  | jtmspro     | 蓝牙锁         | C501       |
-+------------------+--------------------+------------------+----------------+-------------+---------------+-------------+
-| porta 01         | eb9exxxxxxxxxxccmz | bxxxxxxxxxd |XX:xx:xx:xx:xx::xx   | jtmspro     | WIFI智能门锁    | B509       |
-+------------------+--------------------+------------------+----------------+-------------+-----------------+----------+
-| quadro 01       | ebxxxxxxxxxxxxxXlvf | Sxxxxxxxxx{ | XX:xx:xx:xx:xx:2:62 | zndb        | Zigbee Dual Me | PJ1203A  |
-+------------------+--------------------+-------------+--------------------+-------------+------------------+---------+
-| quarto 02       | ebxxxxxxxxxxxxxxxuf | 7cxxxxxxxx4 | XX:xx:xx:xx:xx:     | kg          | Wifi smart 1CH  | KG31WF  |
-+------------------+--------------------+-------------+---------------------+-------------+------------------+--------+
++--------------+------------+-------------+---------------------+-------------+------------------+----------+
+| name         | id       | key         | mac                 | category    | product_name     | model    |
++=============+==========+=============+=====================+=============+=================+============+
+| Ar Bibi     | ebc53pyp | xxxxxxxxxxx |  XX:xx:xx:xx:xx::xx | infrared_ac | 空调             |           |
++--------------+---------+--------------+-------------------------+-------------+--------------+-----------+
+| GWZig        | eb7f ecs | xxxxxxxxxxx | XX:xx:xx:xx:xx::xx  | wg2         | NH-HG小网关     | ZHUB-W    |
++--------------+---------+-------------+---------------------+-------------+------------------+----------+
+| P02-F.Verme  | exxxwg1 | wxxxxxxxxxF | XX:xx:xx:xx:xx::xx  | aqcz        | WiFi Digital M | PJ-1103   |
++--------------+---------+------------------+----------------+-------------+----------------+------------+
+| porta 01     | eb39   | 40xxxxxxx05 | XX:xx:xx:xx:xx::xx  | jtmspro     | 蓝牙锁         | C501       |
++--------------+--------+------------------+----------------+-------------+---------------+-------------+
+| porta 01     | eb9exz | bxxxxxxxxxd |XX:xx:xx:xx:xx::xx   | jtmspro     | WIFI智能门锁    | B509       |
++--------------+-------+------------------+----------------+-------------+-----------------+----------+
+| quadro 01    | ebxxvf | Sxxxxxxxxx{ | XX:xx:xx:xx:xx:2:62 | zndb        | Zigbee Dual Me | PJ1203A  |
++--------------+------+-------------+--------------------+-------------+------------------+---------+
+| quarto 02    | ebxxf | 7cxxxxxxxx4 | XX:xx:xx:xx:xx:     | kg          | Wifi smart 1CH  | KG31WF  |
++-----------+----------+-------------+---------------------+-------------+------------------+--------+
 
 
 Scip cloudpi.py faz sonultas diretamente na nuvem da Tuya ou diretamente no disponsitovso.
