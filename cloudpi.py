@@ -1,13 +1,41 @@
 #!/usr/bin/env python3
 import argparse
+import os
+from pathlib import Path
 import tinytuya
 
+def load_dotenv(dotenv_path=".env"):
+    """Carrega variaveis de ambiente de um arquivo .env simples."""
+    env_file = Path(dotenv_path)
+    if not env_file.exists():
+        return
+
+    for raw_line in env_file.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip("'").strip('"')
+        if key and key not in os.environ:
+            os.environ[key] = value
+
 def get_device_status_cloud(device_id, device_type):
+    load_dotenv()
+    api_region = os.getenv("TUYA_API_REGION", "us")
+    api_key = os.getenv("TUYA_API_KEY")
+    api_secret = os.getenv("TUYA_API_SECRET")
+
+    if not api_key or not api_secret:
+        print("online;0;temp;0;batt;0;api;TUYA_API_KEY_ou_TUYA_API_SECRET_nao_configurados")
+        return
+
     # Conectar à Tuya Cloud
     c = tinytuya.Cloud(
-        apiRegion="us",
-        apiKey=" ley",
-        apiSecret=" secret"
+        apiRegion=api_region,
+        apiKey=api_key,
+        apiSecret=api_secret
     )
 
     # Exibir status do dispositivo

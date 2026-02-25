@@ -1,74 +1,90 @@
 # tuyazabbix
-scrip em python para integracao da API tuya com Zabbix
 
+Scripts Python para integrar dispositivos Tuya com Zabbix, com consulta via cloud e via rede local.
 
-Os script são baseador na classe tinytuya disponivel no git:
+## Dependencias
 
-https://github.com/jasonacox/tinytuya
+Instale com:
 
-Necessario fazer a instalação
-pip install tinytuya
+```bash
+pip install -r requirements.txt
+```
 
-Usamos tambe classe de tabulação para gerar a lista:
-pip install tabulate
+Dependencias usadas:
+- `tinytuya`
+- `tabulate`
 
-o scrip cloudListAllDevices.py lista todos os disponsitovos e seus dados 
+## Arquivos principais
 
-Precisamos de 3 informações importantes 
-1) ID dispositivos, usado para consultas em nuvem e local
-3) MAC address , usado para fixar IP nos IOTs que serão consultados locamente.
-4) Modelo do dispositivos para podere classificar qual tipo de consulta fazer pois existe alguns "sub modelos, Senosr temperatura com indicador de bateria, sem indiciador, etc
+- `cloudListAllDevices.py`: lista dispositivos da conta Tuya e pode gerar `localKey.txt`.
+- `cloudpi.py`: consulta status de dispositivos (cloud ou local) no formato esperado para coleta.
 
- X ) KeyLocal, chave local que sera usada para consultas locais diretamente em dispositivos |
+## Configuracao da cloud com .env
 
+O `cloudpi.py` le credenciais do arquivo `.env` no mesmo diretorio do script.
 
-Para rodar basta rodar scrup pasando userKey  e "senha"
-CludListAll.py UserKEYtvhy785s559hr SecreTEaaXX:xx:xx:xx:xx::xxdb3ISSOVALEOURO
+1. Crie o `.env` com base no exemplo:
 
-Gerando lista
-nome | ID | Chave Local | MAC | modelo 
+```bash
+cp .env.example .env
+```
 
-Caso possivel recomendo usar consultas locais, elas são mais atualizadas , mais rapidas, não depdentes de nada alems do equipamento e não custa dinheiro.
+2. Edite o arquivo `.env`:
 
-Para rodar basta rodar scrup pasando userKey , "senha" , passando parametro --gerLocalKey
-CludListAll.py UserKEYtvhy785s559hr SecreTEaaXX:xx:xx:xx:xx::xxdb3ISSOVALEOURO --gerLocalKey
+```env
+TUYA_API_REGION=us
+TUYA_API_KEY=sua_api_key
+TUYA_API_SECRET=sua_api_secret
+```
 
-sera gerado arquivo locakKey.txt contendo ID e localKey , como as locakey usar muitos carecteres especiais fica "impossivel" usar ela diretamente no zabbix, para usar diretamente no zabbix você tem que tratar a string.
+## Como listar dispositivos da conta
 
+```bash
+python3 cloudListAllDevices.py SUA_API_KEY SUA_API_SECRET
+```
 
-O Scipt cloudpi.py faz sonultas diretamente na nuvem da Tuya ou diretamente no disponsitovso.
+Para gerar `localKey.txt` automaticamente:
 
-para realiza as consulta você precisa cadastra dentro do scrip sua key e sua chave da API tuya (logo logo vou fazer um passo a passo em video)
+```bash
+python3 cloudListAllDevices.py SUA_API_KEY SUA_API_SECRET --geralocalkey
+```
 
-Consutas em nuvem temperatura # esse numero nucna numa, mesmo se mudar de conta o ID segue dispostivos.
-python3 cloudpi.py cloud sensor ID_DISPOSTIVOS_eba4736c777gkly 
+## Formato do localKey.txt
 
+Arquivo usado no modo local do `cloudpi.py`.
 
-Consutas em nuvem temperatura # esse numero nucna numa, mesmo se mudar de conta o ID segue dispostivos.
-python3 cloudpi.py cloud smoke ID_DISPOSTIVOS_e24736c777gkly
+Cada linha deve ter:
 
+```txt
+ID_DO_DISPOSITIVO|LOCAL_KEY
+```
 
-Consutla locamente dos Wattimetros (power metter) 
-Muito "chato" fazer essac consutlas, pois qualquer caracter errado ele não retorna os valores.
-Vantagem que tempo de coleta é muito rapido e pode ser feito sem internet.
-EX: python3 cloudpi.py local power ID_DISPOSTIVOS IPv4_dispositovos 'LOCALKEY_pegarcomOtroScirp'
+Exemplo:
 
-python3 cloudpi.py local power ID_DISPOSTIVOS_e0c8aef4c7us 192.168.0.169
+```txt
+ebxxxxxxxxxxxxxx|a1b2c3d4e5f6g7h8
+```
 
+## Uso do cloudpi.py
 
-Sempre retora 2 valores de controle:
-1º se dispostivos Online ultimo Codigo de erro
+Consulta cloud (sensor de temperatura/umidade):
 
+```bash
+python3 cloudpi.py cloud sensor ID_DO_DISPOSITIVO
+```
 
-Consutla me nuvem:
-sensor de temperatrua modelos:
-TH01CB3Sxxxxxxxxxxx
-温湿度传感器wifi
+Consulta cloud (sensor de fumaca):
 
-Sensor de fumaça modelos:
-烟雾报警器              | YG400A-CBU
+```bash
+python3 cloudpi.py cloud smoke ID_DO_DISPOSITIVO
+```
 
-Consukta loca
-Watimmetros/ medidos de consumo/tensao: 
-WiFi Digital Meter | PJ-1103 
+Consulta local (medidor de energia):
 
+```bash
+python3 cloudpi.py local power ID_DO_DISPOSITIVO IP_DO_DISPOSITIVO
+```
+
+Observacao:
+- No modo local, o script busca a `LOCAL_KEY` no arquivo `localKey.txt`.
+- A consulta local costuma ser mais rapida e independe da internet.
